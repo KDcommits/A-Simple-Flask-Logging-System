@@ -1,3 +1,3 @@
 # A-Simple-Flask-Logging-System
 
-![Alt text](image.png)
+![alt text](http://url/to/image.png)
