@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Dashboard</h1>
+    <p>Hello, {{ session['user_id'] }}!</p>
+    
+    <form action="/logout" method="post">
+        <input type="submit" value="Logout">
+    </form>
+</body>
+</html>

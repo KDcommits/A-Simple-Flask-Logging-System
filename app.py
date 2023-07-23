@@ -3,13 +3,13 @@ import os
 import re
 import uuid
 import bcrypt
-from flask import Flask, render_template, request, redirect, session
-from dotenv import load_dotenv
 import mysql.connector
-load_dotenv()
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, session,url_for, flash
 
+load_dotenv()
 app = Flask(__name__)
-app.secret_key = "password"
+app.secret_key = os.getenv('SECRET_KEY')
 
 # MySQL configurations
 db_config = {
@@ -60,13 +60,9 @@ def signup():
 
     return {"success": True, "message": "Sign-up successful!"}
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=['GET','POST'])
 def login():
-    if request.method == "POST":
+    if request.method == 'POST':
         email = request.form["email"]
         password = request.form["password"].encode('utf-8')
 
@@ -79,10 +75,11 @@ def login():
                 session["user_id"] = user[0]  
                 return {"success": True}
             else:
-                return {"failure": False}
-            
+                return {"success": False}
         else:
-            return "Username not found"    
+            return {"success": False}
+    else:
+        return render_template('login.html')
 
 @app.route("/dashboard")
 def dashboard():
@@ -93,9 +90,16 @@ def dashboard():
         # cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         # user = cursor.fetchone()
         # return render_template("dashboard.html", user=user)
-        return "Welcome to the Dashboard!"
+        return f"Hello, {session['user_id']}! <a href='/logout'>Logout</a>"
     else:
         return redirect("/")
+    
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('user_id')
+    print("Session : ", session)
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True)
