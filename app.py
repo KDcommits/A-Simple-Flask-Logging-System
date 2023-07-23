@@ -1,19 +1,22 @@
 # app.py
+import os
 import re
 import uuid
 import bcrypt
 from flask import Flask, render_template, request, redirect, session
+from dotenv import load_dotenv
 import mysql.connector
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "password"
 
 # MySQL configurations
 db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "1320",
-    "database": "hr_analytics",
+    "host": os.getenv('DB_HOST'),
+    "user": os.getenv('DB_USERNAME'),
+    "password": os.getenv('DB_PASSWORD'),
+    "database": os.getenv('DB_NAME'),
 }
 
 conn = mysql.connector.connect(**db_config)
